@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tagarise – Username Checker (MVP)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --card: #111823;
+        --muted: #6b7280;
+        --ok: #10b981;
+        --bad: #ef4444;
+        --warn: #f59e0b;
+        --chip: #1f2937;
+        --text: #e5e7eb;
+        --link: #38bdf8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 920px;
+        margin: 40px auto;
+        padding: 0 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid #1f2733;
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 20px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .row > * {
+        flex: 1 1 auto;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #cbd5e1;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #233044;
+        background: #0e141d;
+        color: var(--text);
+        border-radius: 10px;
+        outline: none;
+      }
+      input[type="text"]:focus {
+        border-color: #3b82f6;
+      }
+      button {
+        padding: 12px 16px;
+        border-radius: 10px;
+        background: #3b82f6;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        background: var(--chip);
+        padding: 8px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .chip input {
+        accent-color: #3b82f6;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .results {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 12px;
+      }
+      .res {
+        background: #0d131c;
+        border: 1px solid #1f2733;
+        border-radius: 12px;
+        padding: 12px;
+      }
+      .res h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+      }
+      .b-free {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--ok);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+      }
+      .b-taken {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--bad);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+      }
+      .b-error {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warn);
+        border: 1px solid rgba(245, 158, 11, 0.4);
+      }
+      .b-unknown {
+        background: rgba(148, 163, 184, 0.12);
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+      }
+      .kvs {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: #cbd5e1;
+      }
+      .kvs span {
+        background: #0b1018;
+        border: 1px solid #1f2733;
+        padding: 4px 8px;
+        border-radius: 8px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 6px;
+      }
+      a {
+        color: var(--link);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .hr {
+        height: 1px;
+        background: #1f2733;
+        margin: 14px 0;
+      }
+      .sum {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .sum div {
+        background: #0d131c;
+        border: 1px solid #1f2733;
+        padding: 8px 10px;
+        border-radius: 10px;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
+          "Liberation Mono", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Tagarise — Username Checker</h1>
+        <div class="row">
+          <div style="min-width: 240px">
+            <label>Kullanıcı adı</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="ör. serlow"
+              autocomplete="off"
+            />
+            <div class="toolbar">
+              <a href="#" id="selectAll">Tüm platformlar</a>
+              <span class="muted">·</span>
+              <a href="#" id="clearAll">Temizle</a>
+            </div>
+          </div>
+          <div style="flex: 2 1 420px">
+            <label>Platformlar</label>
+            <div id="platforms" class="chips">
+              <span class="muted">yükleniyor…</span>
+            </div>
+          </div>
+          <div style="min-width: 150px">
+            <button id="checkBtn">Kontrol Et</button>
+          </div>
+        </div>
+
+        <div id="note" class="muted" style="margin-top: 10px"></div>
+        <div class="hr"></div>
+
+        <div id="summary" class="sum"></div>
+        <div id="results" class="results"></div>
+      </div>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
