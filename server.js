@@ -116,7 +116,15 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
-app.get("/api/hello", (_req, res) => res.json({ ok: true, message: "hello" }));
+app.get("/api/hello", (_req, res) => {
+  res.json({
+    status: "ok",
+    message: "hello",
+    version: pkg.version,
+    uptimeSec: Math.floor((Date.now() - startedAt) / 1000),
+    time: new Date().toISOString(),
+  });
+});
 
 app.get("/api/platforms", (_req, res) =>
   res.json({ platforms: Object.keys(adapters) })
