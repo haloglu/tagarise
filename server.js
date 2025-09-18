@@ -23,7 +23,9 @@ import { validateCheck } from "./utils/validate.js";
 import { requestTimeout } from "./utils/requestTimeout.js";
 
 import pkg from "./package.json" assert { type: "json" };
-
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pkg = require("./package.json");
 // ---- App & config
 const app = express();
 const PORT = process.env.PORT || 4000;
