@@ -6,6 +6,7 @@ import { withTimeout, TimeoutError } from "./utils/withTimeout.js";
 import { retryOnce } from "./utils/retry.js";
 
 import express from "express";
+import favicon from "serve-favicon";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import helmet from "helmet";
@@ -22,10 +23,10 @@ import { cache } from "./utils/cache.js";
 import { validateCheck } from "./utils/validate.js";
 import { requestTimeout } from "./utils/requestTimeout.js";
 
-import pkg from "./package.json" assert { type: "json" };
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pkg = require("./package.json");
+
 // ---- App & config
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -38,6 +39,9 @@ const ADAPTER_TIMEOUT_MS = parseInt(
 ); // 10 sn
 
 app.set("trust proxy", 1);
+
+// favicon middleware
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
 // ---- Global middlewares (sıra önemli)
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
