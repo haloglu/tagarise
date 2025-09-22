@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
-  },
+  "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+  "dev:server": "node server.js",
+  "dev:client": "npm --prefix client run dev",
+  "build:client": "npm --prefix client run build",
+  "preview:client": "npm --prefix client run preview"
+},
   "dependencies": {
     "compression": "^1.8.1",
     "cors": "^2.8.5",
@@ -16,5 +20,8 @@
     "serve-favicon": "^2.5.1",
     "undici": "^7.16.0",
     "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
