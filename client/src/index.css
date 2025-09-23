@@ -1,68 +1,203 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg: #f6f7fb; /* sayfa arka planı (açık) */
+  --text: #101423; /* ana metin */
+  --muted: #5f6b83; /* ikincil metin */
+  --brand: #0b1426; /* koyu navbar */
+  --card: #121c2b; /* kart */
+  --card-border: rgba(0, 0, 0, 0.12);
+  --radius: 16px;
+  --shadow: 0 10px 24px rgba(16, 20, 35, 0.16);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --success: #16a34a;
+  --danger: #ef4444;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  --chip: #fff;
+  --chip-border: #d8deea;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  /* platform renkleri (çip/hint) */
+  --gh: #111827; /* GitHub siyah */
+  --md: #02b875; /* Medium yeşil */
+  --be: #0057ff; /* Behance mavi */
+  --rd: #ff4500; /* Reddit turuncu */
 }
 
 body {
   margin: 0;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* NAVBAR */
+.navbar {
+  height: 56px;
+  background: var(--brand);
+  color: #fff;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-brand {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+.nav-icon {
+  opacity: 0.85;
+  text-decoration: none;
+  color: #fff;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* sayfa yerleşimi */
+.container {
+  max-width: 1080px;
+  margin: 24px auto 64px;
+  padding: 0 20px;
+}
+.h1 {
+  font-size: 44px;
+  font-weight: 900;
+  text-align: center;
+  margin: 24px 0 6px;
+}
+.sub {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 16px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+/* arama + buton */
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  justify-content: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.input {
+  width: 100%;
+  border: 1.5px solid #e5e9f3;
+  background: #fff;
+  color: var(--text);
+  height: 42px;
+  border-radius: 12px;
+  padding: 0 12px;
+  outline: none;
+}
+.btn {
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  padding: 0 14px;
+  background: #0f1b2e;
+  color: #fff;
+  font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* label */
+.label {
+  margin-top: 14px;
+  color: #2a3a57;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* chips */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 8px;
+}
+.chip {
+  background: var(--chip);
+  border: 1.5px solid var(--chip-border);
+  color: #1e293b;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  user-select: none;
+}
+.chip.gh {
+  border-color: rgba(17, 24, 39, 0.2);
+}
+.chip.md {
+  border-color: rgba(2, 184, 117, 0.35);
+  color: #036b46;
+}
+.chip.be {
+  border-color: rgba(0, 87, 255, 0.35);
+  color: #0840b6;
+}
+.chip.rd {
+  border-color: rgba(255, 69, 0, 0.35);
+  color: #b63a00;
+}
+
+/* bölüm başlığı çizgi */
+.section {
+  margin: 28px auto 8px;
+  max-width: 960px;
+  color: #2a3a57;
+  font-weight: 700;
+}
+.hr {
+  height: 1px;
+  background: #e6e9f4;
+  border: 0;
+  margin: 8px 0 18px;
+}
+
+/* kart grid + kart */
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .row {
+    grid-template-columns: repeat(3, 1fr);
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 16px;
+  color: #e8eefc;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.card h4 {
+  margin: 0;
+  font-size: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.status {
+  margin-top: 8px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+.status.free {
+  color: var(--success);
+}
+.status.taken {
+  color: var(--danger);
+}
+.ext {
+  opacity: 0.8;
+  text-decoration: none;
 }

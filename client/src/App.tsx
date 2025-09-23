@@ -1,35 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import PlatformChips from "./components/PlatformChips";
+import ResultsGrid from "./components/ResultsGrid";
+import { useEffect, useMemo, useState } from "react";
+import { fetchPlatforms, checkUsername } from "./api";
+import type { PlatformResult, CheckResponse } from "./types";
+import "./index.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [all, setAll] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [results, setResults] = useState<PlatformResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPlatforms()
+      .then((p) => {
+        setAll(p);
+        setSelected(p);
+      })
+      .catch(() => setError("Platform listesi çekilemedi"));
+  }, []);
+
+  const subtitle = useMemo(() => "Tag it. Rise with it.", []);
+
+  const runCheck = async (username: string) => {
+    setError(null);
+    setLoading(true);
+    setResults([]);
+    try {
+      const data: CheckResponse = await checkUsername(
+        username,
+        selected.length ? selected : all
+      );
+      setResults(data.results ?? []);
+    } catch {
+      setError("Kontrol sırasında bir hata oluştu");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggle = (name: string) => {
+    setSelected((prev) =>
+      prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name]
+    );
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      <Header />
+      <div className="container">
+        <div className="h1">Username Checker</div>
+        <div className="sub">{subtitle}</div>
 
-export default App
+        <div className="search-row">
+          <input
+            className="input"
+            placeholder="/"
+            onKeyDown={(e) => {
+              const t = e.target as HTMLInputElement;
+              if (e.key === "Enter" && t.value.trim()) runCheck(t.value.trim());
+            }}
+          />
+          <button
+            className="btn"
+            onClick={() => {
+              const el = document.querySelector<HTMLInputElement>(".input");
+              if (el?.value.trim()) runCheck(el.value.trim());
+            }}
+          >
+            🔍 Kontrol Et
+          </button>
+        </div>
+
+        <div className="label">Platformlar:</div>
+        <PlatformChips all={all} selected={selected} onToggle={toggle} />
+
+        <div className="section">Sonuçlar</div>
+        <div className="hr"></div>
+
+        {error && <div style={{ color: "#b54700", marginTop: 8 }}>{error}</div>}
+        <ResultsGrid items={results} />
+      </div>
+    </>
+  );
+}
