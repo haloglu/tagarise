@@ -197,6 +197,13 @@ body {
 .status.taken {
   color: var(--danger);
 }
+
+.status.error {
+  color: #f97316;
+}
+.status.unknown {
+  color: #64748b;
+}
 .ext {
   opacity: 0.8;
   text-decoration: none;

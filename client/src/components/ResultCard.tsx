@@ -15,6 +15,21 @@ const platformIcon = (p: string) => {
   }
 };
 
+const statusIcon = (s: string) => {
+  switch (s) {
+    case "free":
+      return <i className="fa-solid fa-circle-check"></i>;
+    case "taken":
+      return <i className="fa-solid fa-circle-xmark"></i>;
+    case "error":
+      return <i className="fa-solid fa-triangle-exclamation"></i>;
+    case "unknown":
+      return <i className="fa-solid fa-circle-question"></i>;
+    default:
+      return <i className="fa-solid fa-circle"></i>;
+  }
+};
+
 export default function ResultCard({ item }: { item: PlatformResult }) {
   const { platform, status, url, ms } = item;
   return (
@@ -26,8 +41,8 @@ export default function ResultCard({ item }: { item: PlatformResult }) {
           alignItems: "center",
         }}
       >
-        <h4>
-          <span>{platformIcon(platform)}</span>
+        <h4 style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {platformIcon(platform)}
           <span style={{ opacity: 0.9 }}>{platform}</span>
         </h4>
         {url && (
@@ -36,8 +51,11 @@ export default function ResultCard({ item }: { item: PlatformResult }) {
           </a>
         )}
       </div>
-      <div className={`status ${status}`}>
-        {status.toUpperCase()}{" "}
+      <div
+        className={`status ${status}`}
+        style={{ display: "flex", alignItems: "center", gap: 6 }}
+      >
+        {statusIcon(status)} {status.toUpperCase()}
         {typeof ms === "number" && (
           <span style={{ opacity: 0.7 }}>({ms} ms)</span>
         )}
