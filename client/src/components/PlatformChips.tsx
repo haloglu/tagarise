@@ -14,24 +14,23 @@ export default function PlatformChips({
       {all.map((p) => {
         const active = selected.includes(p);
         return (
-          <div
+          <button
             key={p}
-            className={`chip ${
-              p === "github"
-                ? "gh"
-                : p === "medium"
-                ? "md"
-                : p === "behance"
-                ? "be"
-                : p === "reddit"
-                ? "rd"
-                : ""
-            }`}
+            type="button"
+            className={clsx(
+              "chip",
+              p === "github" && "gh",
+              p === "medium" && "md",
+              p === "behance" && "be",
+              p === "reddit" && "rd",
+              active && "active"
+            )}
             onClick={() => onToggle(p)}
             title={p}
+            aria-pressed={active}
           >
             {p}
-          </div>
+          </button>
         );
       })}
     </div>

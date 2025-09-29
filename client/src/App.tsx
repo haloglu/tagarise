@@ -13,6 +13,12 @@ export default function App() {
   const [results, setResults] = useState<PlatformResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([
+    "github",
+    "reddit",
+    "medium",
+    "behance",
+  ]);
 
   useEffect(() => {
     fetchPlatforms()
@@ -48,6 +54,12 @@ export default function App() {
     );
   };
 
+  const togglePlatform = (p: string) => {
+    setSelectedPlatforms((prev) =>
+      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
+    );
+  };
+
   return (
     <>
       <Header />
@@ -71,7 +83,11 @@ export default function App() {
               if (el?.value.trim()) runCheck(el.value.trim());
             }}
           >
-            🔍 Kontrol Et
+            <i
+              className="fa-solid fa-magnifying-glass"
+              style={{ marginRight: 8 }}
+            />
+            Kontrol Et
           </button>
         </div>
 
