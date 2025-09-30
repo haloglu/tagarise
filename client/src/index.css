@@ -300,3 +300,76 @@ body {
   background: #ff4500;
   border-color: #ff4500;
 }
+
+/* --- Skeleton (shimmer) helpers --- */
+@keyframes sk-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.sk {
+  position: relative;
+  overflow: hidden;
+}
+.sk-line,
+.sk-pill,
+.sk-dot {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #1f2937; /* base blok rengi (dark uyumlu) */
+  border-radius: 8px;
+}
+
+/* Boyut kısayolları */
+.sk-line {
+  height: 14px;
+  margin: 8px 0;
+}
+.sk-line.short {
+  width: 60%;
+}
+.sk-line.tiny {
+  width: 48px;
+  height: 12px;
+}
+.sk-pill {
+  width: 84px;
+  height: 22px;
+  border-radius: 999px;
+}
+.sk-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+/* Shimmer kaplaması */
+.sk-line::after,
+.sk-pill::after,
+.sk-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.14) 50%,
+    transparent 100%
+  );
+  animation: sk-shimmer 1.15s infinite;
+}
+
+/* Motion tercihine saygı */
+@media (prefers-reduced-motion: reduce) {
+  .sk-line::after,
+  .sk-pill::after,
+  .sk-dot::after {
+    animation: sk-shimmer 2s infinite;
+  }
+}

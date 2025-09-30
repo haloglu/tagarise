@@ -1,8 +1,8 @@
+// App.tsx
 import Header from "./components/Header";
-import SearchBar from "./components/SearchBar";
 import PlatformChips from "./components/PlatformChips";
 import ResultsGrid from "./components/ResultsGrid";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchPlatforms, checkUsername } from "./api";
 import type { PlatformResult, CheckResponse } from "./types";
 import "./index.css";
@@ -13,12 +13,8 @@ export default function App() {
   const [results, setResults] = useState<PlatformResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([
-    "github",
-    "reddit",
-    "medium",
-    "behance",
-  ]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     fetchPlatforms()
@@ -32,6 +28,7 @@ export default function App() {
   const subtitle = useMemo(() => "Tag it. Rise with it.", []);
 
   const runCheck = async (username: string) => {
+    if (!username) return;
     setError(null);
     setLoading(true);
     setResults([]);
@@ -48,15 +45,21 @@ export default function App() {
     }
   };
 
+  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const v = inputRef.current?.value.trim();
+      if (v) runCheck(v);
+    }
+  };
+
+  const handleClick = () => {
+    const v = inputRef.current?.value.trim();
+    if (v) runCheck(v);
+  };
+
   const toggle = (name: string) => {
     setSelected((prev) =>
       prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name]
-    );
-  };
-
-  const togglePlatform = (p: string) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
     );
   };
 
@@ -69,20 +72,14 @@ export default function App() {
 
         <div className="search-row">
           <input
+            ref={inputRef}
             className="input"
             placeholder="/"
-            onKeyDown={(e) => {
-              const t = e.target as HTMLInputElement;
-              if (e.key === "Enter" && t.value.trim()) runCheck(t.value.trim());
-            }}
+            onKeyDown={handleEnter}
+            aria-label="Kullanıcı adı girin"
+            autoComplete="off"
           />
-          <button
-            className="btn"
-            onClick={() => {
-              const el = document.querySelector<HTMLInputElement>(".input");
-              if (el?.value.trim()) runCheck(el.value.trim());
-            }}
-          >
+          <button className="btn" onClick={handleClick} aria-label="Kontrol et">
             <i
               className="fa-solid fa-magnifying-glass"
               style={{ marginRight: 8 }}
@@ -98,7 +95,12 @@ export default function App() {
         <div className="hr"></div>
 
         {error && <div style={{ color: "#b54700", marginTop: 8 }}>{error}</div>}
-        <ResultsGrid items={results} />
+
+        <ResultsGrid
+          items={results}
+          isLoading={loading}
+          skeletonCount={selected.length || 8}
+        />
       </div>
     </>
   );
