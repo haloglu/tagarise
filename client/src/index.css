@@ -70,27 +70,75 @@ body {
   margin-bottom: 16px;
 }
 
-/* arama + buton */
+/* SEARCH BAR — Figma-style prefix slot */
 .search-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  align-items: center; /* ✅ buton ve input’u dikeyde hizala */
   gap: 10px;
   justify-content: center;
   max-width: 640px;
   margin: 0 auto;
 }
+
+.input-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 640px;
+}
+
 .input {
-  width: 100%;
+  display: block; /* ✅ satır yüksekliği sürprizini önler */
+  width: 85%;
+  height: 42px;
   border: 1.5px solid #e5e9f3;
+  border-radius: 12px;
   background: #fff;
   color: var(--text);
-  height: 42px;
-  border-radius: 12px;
-  padding: 0 12px;
   outline: none;
+  padding: 0 12px;
+  padding-left: 52px; /* prefix + divider alanı */
+  font-size: 15px;
 }
+
+/* “/” slotu */
+.input-wrap::before {
+  content: "/";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 22px;
+  border-radius: 6px;
+  color: #64748b;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* dikey ayırıcı */
+.input-wrap::after {
+  content: "";
+  position: absolute;
+  left: 44px; /* 10 + 28 + ~6 boşluk */
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+  background: #e5e9f3;
+  pointer-events: none;
+}
+
+/* focus */
+.input:focus {
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
 .btn {
   height: 42px;
+  width: 140px;
   border: none;
   border-radius: 12px;
   padding: 0 14px;

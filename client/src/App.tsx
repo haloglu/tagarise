@@ -71,14 +71,17 @@ export default function App() {
         <div className="sub">{subtitle}</div>
 
         <div className="search-row">
-          <input
-            ref={inputRef}
-            className="input"
-            placeholder="/"
-            onKeyDown={handleEnter}
-            aria-label="Kullanıcı adı girin"
-            autoComplete="off"
-          />
+          <div className="input-wrap">
+            <input
+              ref={inputRef}
+              className="input"
+              placeholder="username" // ⬅︎ burada artık "/" YOK
+              onKeyDown={handleEnter}
+              aria-label="Kullanıcı adı girin"
+              autoComplete="off"
+            />
+          </div>
+
           <button className="btn" onClick={handleClick} aria-label="Kontrol et">
             <i
               className="fa-solid fa-magnifying-glass"
