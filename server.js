@@ -15,6 +15,8 @@ import crypto from "node:crypto";
 import pLimit from "p-limit";
 
 import path from "node:path";
+import fs from "node:fs"; // ⬅️ EKLE
+
 import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -41,8 +43,19 @@ const ADAPTER_TIMEOUT_MS = parseInt(
 app.set("trust proxy", 1);
 
 // favicon middleware
-app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+const favCandidates = [
+  path.join(__dirname, "public", "favicon.ico"), // monorepo root/public
+  path.join(__dirname, "client", "public", "favicon.ico"), // client/public
+  path.join(__dirname, "client", "favicon.ico"), // olası build çıktısı
+];
 
+const favPath = favCandidates.find((p) => fs.existsSync(p));
+if (favPath) {
+  console.log("[favicon] using:", favPath);
+  app.use(favicon(favPath));
+} else {
+  console.warn("[favicon] not found, skipping serve-favicon");
+}
 // ---- Global middlewares (sıra önemli)
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
 app.use(cors({ origin: CORS_ORIGIN })); // preflight öncesi
