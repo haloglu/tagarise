@@ -1,5 +1,5 @@
 [build]
-  command = "npm --prefix client run build"
+  command = "npm --prefix client ci --no-audit --no-fund && npm --prefix client run build"
   publish = "client/dist"
 
 [build.environment]
