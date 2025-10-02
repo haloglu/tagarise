@@ -1,4 +1,4 @@
-﻿[build]
+[build]
   command = "npm --prefix client run build"
   publish = "client/dist"
 
